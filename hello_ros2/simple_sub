@@ -1,0 +1,25 @@
+import rclpy
+from rclpy.node import Node
+from std_msgs.msg import String  # ✅ 올바른 패키지와 타입
+
+class SimpleSub(Node):  # ✅ 클래스 이름은 관례상 CamelCase
+    def __init__(self):
+        super().__init__('simple_sub')
+        self.create_subscription(String, 'message', self.sub_callback, 10)
+        self.get_logger().info('Subscribed to "message" topic.')
+
+    def sub_callback(self, msg: String):  # ✅ 함수명 일치
+        self.get_logger().info(f'Received: {msg.data}')
+
+def main():
+    rclpy.init()
+    node = SimpleSub()  # ✅ 클래스 이름 수정
+    try:
+        rclpy.spin(node)
+    except KeyboardInterrupt:
+        node.destroy_node()
+        rclpy.shutdown()
+
+if __name__ == '__main__':
+    main()
+
